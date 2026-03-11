@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 09/03/2026 às 17:43
--- Versão do servidor: 10.4.32-MariaDB
--- Versão do PHP: 8.2.12
+-- Tempo de geração: 11/03/2026 às 21:08
+-- Versão do servidor: 10.4.28-MariaDB
+-- Versão do PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,6 +20,35 @@ SET time_zone = "+00:00";
 --
 -- Banco de dados: `db_industria_automotiva`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `tb_fabricantes`
+--
+
+CREATE TABLE `tb_fabricantes` (
+  `id_fabricante` int(11) NOT NULL,
+  `nome_fabricante` varchar(100) NOT NULL,
+  `pais_origem` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `tb_fabricantes`
+--
+
+INSERT INTO `tb_fabricantes` (`id_fabricante`, `nome_fabricante`, `pais_origem`) VALUES
+(1, 'Toyota', 'Japão'),
+(2, 'Volkswagen', 'Alemanha'),
+(3, 'Fiat', 'Itália'),
+(4, 'Ford', 'EUA'),
+(5, 'Chevrolet', 'EUA'),
+(6, 'Hyundai', 'Coreia do Sul'),
+(7, 'Honda', 'Japão'),
+(8, 'Renault', 'França'),
+(9, 'Ferrari', 'Itália'),
+(10, 'Bugatti', 'França'),
+(11, 'Lamborghini', 'Itália');
 
 -- --------------------------------------------------------
 
@@ -125,9 +154,56 @@ INSERT INTO `tb_usuarios` (`id_usuario`, `nome_usuario`, `login`, `senha`, `nive
 (4, 'Daniela Silva', 'daniela.op', 'op789', 'operador'),
 (5, 'Emerson Camargo', 'admin', 'admin', 'admin');
 
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `tb_veiculos`
+--
+
+CREATE TABLE `tb_veiculos` (
+  `id_veiculo` int(11) NOT NULL,
+  `modelo` varchar(100) NOT NULL,
+  `ano_fabricacao` int(11) DEFAULT NULL,
+  `valor_tabela` decimal(10,2) DEFAULT NULL,
+  `id_fabricante_fk` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `tb_veiculos`
+--
+
+INSERT INTO `tb_veiculos` (`id_veiculo`, `modelo`, `ano_fabricacao`, `valor_tabela`, `id_fabricante_fk`) VALUES
+(1, 'Corolla', 2023, 145000.00, 1),
+(2, 'Hilux', 2022, 280000.00, 1),
+(3, 'Yaris', 2021, 95000.00, 1),
+(4, 'Golf', 2020, 110000.00, 2),
+(5, 'Polo', 2023, 85000.00, 2),
+(6, 'T-Cross', 2022, 120000.00, 2),
+(7, 'Uno', 2015, 35000.00, 3),
+(8, 'Toro', 2021, 130000.00, 3),
+(9, 'Argo', 2023, 75000.00, 3),
+(10, 'Mustang', 2024, 550000.00, 4),
+(11, 'Territory', 2023, 210000.00, 4),
+(12, 'Onix', 2022, 82000.00, 5),
+(13, 'S10', 2021, 250000.00, 5),
+(14, 'Tracker', 2023, 115000.00, 5),
+(15, 'HB20', 2023, 80000.00, 6),
+(16, 'Creta', 2022, 135000.00, 6),
+(17, 'Civic', 2023, 240000.00, 7),
+(18, 'City', 2022, 110000.00, 7),
+(19, 'Kwid', 2023, 65000.00, 8),
+(20, 'Duster', 2021, 98000.00, 8),
+(22, 'Ferrari 458', 2025, 2500000.00, 9);
+
 --
 -- Índices para tabelas despejadas
 --
+
+--
+-- Índices de tabela `tb_fabricantes`
+--
+ALTER TABLE `tb_fabricantes`
+  ADD PRIMARY KEY (`id_fabricante`);
 
 --
 -- Índices de tabela `tb_maquinas`
@@ -151,8 +227,21 @@ ALTER TABLE `tb_usuarios`
   ADD UNIQUE KEY `login` (`login`);
 
 --
+-- Índices de tabela `tb_veiculos`
+--
+ALTER TABLE `tb_veiculos`
+  ADD PRIMARY KEY (`id_veiculo`),
+  ADD KEY `fk_veiculo_fabricante` (`id_fabricante_fk`);
+
+--
 -- AUTO_INCREMENT para tabelas despejadas
 --
+
+--
+-- AUTO_INCREMENT de tabela `tb_fabricantes`
+--
+ALTER TABLE `tb_fabricantes`
+  MODIFY `id_fabricante` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de tabela `tb_maquinas`
@@ -173,6 +262,12 @@ ALTER TABLE `tb_usuarios`
   MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT de tabela `tb_veiculos`
+--
+ALTER TABLE `tb_veiculos`
+  MODIFY `id_veiculo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
 -- Restrições para tabelas despejadas
 --
 
@@ -181,6 +276,12 @@ ALTER TABLE `tb_usuarios`
 --
 ALTER TABLE `tb_producao`
   ADD CONSTRAINT `tb_producao_ibfk_1` FOREIGN KEY (`id_maquina`) REFERENCES `tb_maquinas` (`id_maquina`);
+
+--
+-- Restrições para tabelas `tb_veiculos`
+--
+ALTER TABLE `tb_veiculos`
+  ADD CONSTRAINT `fk_veiculo_fabricante` FOREIGN KEY (`id_fabricante_fk`) REFERENCES `tb_fabricantes` (`id_fabricante`) ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
